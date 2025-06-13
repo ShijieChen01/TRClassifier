@@ -23,7 +23,8 @@ from sklearn.svm import SVC
 
 import nltk
 nltk.download("stopwords", quiet=True)
-nltk.download("punkt", quiet=True)
+# nltk.download("punkt", quiet=True)
+nltk.download("punkt_tab", quiet=True)
 nltk.download("wordnet", quiet=True)
 
 st.set_page_config(page_title="Abstract Topic & Classification", layout="wide")
