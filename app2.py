@@ -2,12 +2,12 @@ import streamlit as st
 import pandas as pd
 import os
 import pickle
-from sklearn.feature_extraction.text import CountVectorizer
+
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
-
+from sklearn.feature_extraction.text import CountVectorizer
 # ─────────────────────────────────────────────────────────────────────────────
 #  Configuration
 # ─────────────────────────────────────────────────────────────────────────────
