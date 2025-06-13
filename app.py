@@ -419,18 +419,18 @@ def main():
         with st.spinner("Processing..."):
             results = analyze_user_abstract(user_input)
 
-        # Display word frequency (top 20)
-        st.subheader("Word Frequency (Top 20)")
-        wf_df = results["word_freq_df"].head(20)
-        st.table(wf_df)
+        # # Display word frequency (top 20)
+        # st.subheader("Word Frequency (Top 20)")
+        # wf_df = results["word_freq_df"].head(20)
+        # st.table(wf_df)
 
-        # Display topic distribution
-        st.subheader("Topic Distribution")
-        td_df = results["topic_distribution"].T
-        td_df.columns = ["Probability"]
-        td_df["Topic"] = td_df.index
-        td_df = td_df.reset_index(drop=True)[["Topic", "Probability"]]
-        st.dataframe(td_df.style.format({"Probability": "{:.4f}"}))
+        # # Display topic distribution
+        # st.subheader("Topic Distribution")
+        # td_df = results["topic_distribution"].T
+        # td_df.columns = ["Probability"]
+        # td_df["Topic"] = td_df.index
+        # td_df = td_df.reset_index(drop=True)[["Topic", "Probability"]]
+        # st.dataframe(td_df.style.format({"Probability": "{:.4f}"}))
 
         # Display classification predictions
         st.subheader("Journal Classification Predictions")
