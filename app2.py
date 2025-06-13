@@ -50,7 +50,7 @@ def load_or_train_classification_bundle():
     y = labels.values
 
     # Feature extraction
-    vectorizer = CountVectorizer(max_features=1000, stop_words="english")
+    vectorizer = CountVectorizer(max_features=200, stop_words="english")
     X_counts = vectorizer.fit_transform(abstracts)
 
     # Scaling
