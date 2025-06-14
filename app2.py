@@ -2,12 +2,12 @@ import streamlit as st
 import pandas as pd
 import os
 import pickle
-
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
-from sklearn.feature_extraction.text import CountVectorizer
+
 # ─────────────────────────────────────────────────────────────────────────────
 #  Configuration
 # ─────────────────────────────────────────────────────────────────────────────
@@ -45,32 +45,26 @@ def load_or_train_classification_bundle():
         with open(CLASSIFIER_BUNDLE_PATH, "rb") as f:
             return pickle.load(f)
 
-    # Load data
     abstracts, labels = load_corpus_data()
     y = labels.values
 
-    # Feature extraction
     vectorizer = CountVectorizer(max_features=200, stop_words="english")
     X_counts = vectorizer.fit_transform(abstracts)
 
-    # Scaling
     scaler = StandardScaler(with_mean=False).fit(X_counts)
     X_scaled = scaler.transform(X_counts)
 
-    # Define classifiers
     classifiers = {
         "LogisticRegression": LogisticRegression(max_iter=1000, random_state=42),
         "RandomForest": RandomForestClassifier(n_estimators=100, random_state=42),
         "SVC": SVC(probability=True, random_state=42),
     }
 
-    # Train models
     trained_models = {}
     for name, clf in classifiers.items():
         clf.fit(X_scaled, y)
         trained_models[name] = clf
 
-    # Bundle and save
     bundle = {
         "vectorizer": vectorizer,
         "scaler": scaler,
@@ -105,15 +99,25 @@ def analyze_user_abstract(user_text, bundle):
 #  Streamlit App
 # ─────────────────────────────────────────────────────────────────────────────
 def main():
-    st.set_page_config(page_title="Abstract Classification", layout="wide")
-    st.title("📑 Abstract Classification")
+    st.set_page_config(page_title="Transportation Research Journal Recommender", layout="wide")
+    st.title("📑 Transportation Research Journal Recommender")
+
     st.markdown(
         """
-        Paste an abstract below and click Analyze. The app will classify
-        the abstract's journal using three classifiers:
-        Logistic Regression, Random Forest, and SVC.
+        Have you wondered which part of the Transportation Research (TR) journal series is most relevant to your next manuscript? Do you feel overwhelmed by the breadth of TR journals? Try our TR Journal Recommender!
+
+        This tool is based on a majority-vote ensemble of three machine learning classifiers—logistic regression, random forest, and support vector machine. Based on Web of Science data, the classification accuracy is approximately AA%.
+
+        Paste your abstract below and click **Analyze** to receive a recommended TR journal.
         """
     )
+
+    st.markdown("""
+    ### 🧠 vs 🤖 Challenge
+    Do you feel you can beat the machine classifier? Please try! You will be given five abstracts that are easy to classify and five abstracts that are difficult to classify. Finally, you will get your accuracy, which can be compared with the machine classifier.
+
+    [Take the survey](https://fsu.qualtrics.com/jfe/form/SV_81v6JJ7hXVd3eqq)
+    """)
 
     user_input = st.text_area("Paste your abstract here:", height=200)
 
@@ -126,14 +130,13 @@ def main():
             bundle = load_or_train_classification_bundle()
             preds = analyze_user_abstract(user_input, bundle)
 
-        st.subheader("Journal Classification Predictions")
-        results_df = pd.DataFrame(
-            [
-                {"Model": model_name, "Predicted Journal": label}
-                for model_name, label in preds.items()
-            ]
-        )
-        st.table(results_df)
+        # Majority vote
+        from collections import Counter
+        vote_counts = Counter(preds.values())
+        recommended = vote_counts.most_common(1)[0][0]
+
+        st.subheader("Recommended Journal")
+        st.write(f"**{recommended}**")
         st.success("Analysis complete!")
 
 if __name__ == "__main__":
