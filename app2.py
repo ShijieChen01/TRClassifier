@@ -32,6 +32,7 @@ def load_corpus_data():
 def load_or_train_classification_bundle():
     """
     Load saved classification bundle or train classifiers on term-frequency features.
+    Returns a dict with vectorizer, scaler, and models.
     """
     if os.path.exists(CLASSIFIER_BUNDLE_PATH):
         with open(CLASSIFIER_BUNDLE_PATH, "rb") as f:
@@ -57,11 +58,7 @@ def load_or_train_classification_bundle():
         clf.fit(X_scaled, y)
         trained_models[name] = clf
 
-    bundle = {
-        "vectorizer": vectorizer,
-        "scaler": scaler,
-        "models": trained_models,
-    }
+    bundle = {"vectorizer": vectorizer, "scaler": scaler, "models": trained_models}
     with open(CLASSIFIER_BUNDLE_PATH, "wb") as f:
         pickle.dump(bundle, f)
 
@@ -107,14 +104,12 @@ def main():
         .survey { font-size: 16px; }
         .survey h2 { font-size: 20px; margin-bottom: 10px; }
         </style>
-        """, unsafe_allow_html=True
+        """,
+        unsafe_allow_html=True
     )
 
     # App Header
-    st.markdown(
-        "<div class='page-title'>📑 Transportation Research Journal Recommender</div>",
-        unsafe_allow_html=True
-    )
+    st.markdown("<div class='page-title'>📑 Transportation Research Journal Recommender</div>", unsafe_allow_html=True)
 
     # Step-by-step Introduction as rows
     with st.container():
@@ -156,17 +151,19 @@ def main():
             recommended = vote_counts.most_common(1)[0][0]
 
         with col_output:
-            st.markdown(
-                f"<div class='result-box'><div class='step-title'>Recommended Journal</div><div class='step-desc'><strong>{recommended}</strong></div></div>",
-                unsafe_allow_html=True
-            )
+            st.markdown(f"<div class='result-box'><div class='step-title'>Recommended Journal</div><div class='step-desc'><strong>{recommended}</strong></div></div>", unsafe_allow_html=True)
             st.success("Analysis complete!")
 
     # Survey Section
     st.markdown("---")
     st.markdown(
-        "<div class='survey'><h2>🧠 vs 🤖 Challenge</h2><p>Do you feel you can beat the machine classifier? Please try! Test yourself by classifying five easy abstracts and five challenging ones, then compare your accuracy with the model’s performance.</p><p><a href='https://fsu.qualtrics.com/jfe/form/SV_81v6JJ7hXVd3eqq' target='_blank'>Take the survey</a></p></div>
-        ",
+        """
+<div class='survey'>
+  <h2>🧠 vs 🤖 Challenge</h2>
+  <p>Do you feel you can beat the machine classifier? Please try! Test yourself by classifying five easy abstracts and five challenging ones, then compare your accuracy with the model’s performance.</p>
+  <p><a href='https://fsu.qualtrics.com/jfe/form/SV_81v6JJ7hXVd3eqq' target='_blank'>Take the survey</a></p>
+</div>
+""",
         unsafe_allow_html=True
     )
 
