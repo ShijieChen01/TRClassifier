@@ -114,7 +114,7 @@ def main():
 
     st.markdown("""
     ### 🧠 vs 🤖 Challenge
-    Do you feel you can beat the machine classifier? Please try! You will be given five abstracts that are easy to classify and five abstracts that are difficult to classify. Finally, you will get your accuracy, which can be compared with the machine classifier.
+    Do you feel you can beat the machine classifier? Please try! Test yourself by classifying five easy abstracts and five challenging ones, then compare your accuracy with the model’s performance.
 
     [Take the survey](https://fsu.qualtrics.com/jfe/form/SV_81v6JJ7hXVd3eqq)
     """)
