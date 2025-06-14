@@ -106,7 +106,7 @@ def main():
         """
         Have you wondered which part of the Transportation Research (TR) journal series is most relevant to your next manuscript? Do you feel overwhelmed by the breadth of TR journals? Try our TR Journal Recommender!
 
-        This tool is based on a majority-vote ensemble of three machine learning classifiers—logistic regression, random forest, and support vector machine. Based on Web of Science data, the classification accuracy is approximately AA%.
+        This tool is based on a majority-vote ensemble of three machine learning classifiers—logistic regression, random forest, and support vector machine. Based on Web of Science data, the classification accuracy is approximately 65%.
 
         Paste your abstract below and click **Analyze** to receive a recommended TR journal.
         """
