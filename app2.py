@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
- 
+
 # ─────────────────────────────────────────────────────────────────────────────
 #  Configuration
 # ─────────────────────────────────────────────────────────────────────────────
@@ -110,7 +110,7 @@ def main():
         """, unsafe_allow_html=True
     )
 
-    # App Header with reduced font size
+    # App Header
     st.markdown(
         "<div class='page-title'>📑 Transportation Research Journal Recommender</div>",
         unsafe_allow_html=True
@@ -138,30 +138,35 @@ def main():
             unsafe_allow_html=True
         )
 
-    # Abstract Input Area
-    input_col, _, _ = st.columns([3, 1, 3])
-    with input_col:
+    # Abstract and Result Side-by-Side
+    col_input, col_output = st.columns([3, 2])
+
+    with col_input:
         user_input = st.text_area("✍️ Paste your abstract here:", height=200)
-        if st.button("Analyze Abstract"):
-            if not user_input.strip():
-                st.warning("Please enter an abstract to analyze.")
-            else:
-                with st.spinner("Processing..."):
-                    bundle = load_or_train_classification_bundle()
-                    preds = analyze_user_abstract(user_input, bundle)
-                    from collections import Counter
-                    vote_counts = Counter(preds.values())
-                    recommended = vote_counts.most_common(1)[0][0]
-                st.markdown(
-                    f"<div class='result-box'><div class='step-title'>Recommended Journal</div><div class='step-desc'><strong>{recommended}</strong></div></div>",
-                    unsafe_allow_html=True
-                )
-                st.success("Analysis complete!")
+        analyze_clicked = st.button("Analyze Abstract")
+        if analyze_clicked and not user_input.strip():
+            st.warning("Please enter an abstract to analyze.")
+
+    if analyze_clicked and user_input.strip():
+        with st.spinner("Processing..."):
+            bundle = load_or_train_classification_bundle()
+            preds = analyze_user_abstract(user_input, bundle)
+            from collections import Counter
+            vote_counts = Counter(preds.values())
+            recommended = vote_counts.most_common(1)[0][0]
+
+        with col_output:
+            st.markdown(
+                f"<div class='result-box'><div class='step-title'>Recommended Journal</div><div class='step-desc'><strong>{recommended}</strong></div></div>",
+                unsafe_allow_html=True
+            )
+            st.success("Analysis complete!")
 
     # Survey Section
     st.markdown("---")
     st.markdown(
-        "<div class='survey'><h2>🧠 vs 🤖 Challenge</h2><p>Do you feel you can beat the machine classifier? Please try! Test yourself by classifying five easy abstracts and five challenging ones, then compare your accuracy with the model’s performance.</p><p><a href='https://fsu.qualtrics.com/jfe/form/SV_81v6JJ7hXVd3eqq' target='_blank'>Take the survey</a></p></div>",
+        "<div class='survey'><h2>🧠 vs 🤖 Challenge</h2><p>Do you feel you can beat the machine classifier? Please try! Test yourself by classifying five easy abstracts and five challenging ones, then compare your accuracy with the model’s performance.</p><p><a href='https://fsu.qualtrics.com/jfe/form/SV_81v6JJ7hXVd3eqq' target='_blank'>Take the survey</a></p></div>
+        ",
         unsafe_allow_html=True
     )
 
