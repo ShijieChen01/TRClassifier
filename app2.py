@@ -112,12 +112,7 @@ def main():
         """
     )
 
-    st.markdown("""
-    ### 🧠 vs 🤖 Challenge
-    Do you feel you can beat the machine classifier? Please try! Test yourself by classifying five easy abstracts and five challenging ones, then compare your accuracy with the model’s performance.
-
-    [Take the survey](https://fsu.qualtrics.com/jfe/form/SV_81v6JJ7hXVd3eqq)
-    """)
+    
 
     user_input = st.text_area("Paste your abstract here:", height=200)
 
@@ -139,5 +134,11 @@ def main():
         st.write(f"**{recommended}**")
         st.success("Analysis complete!")
 
+    st.markdown("""
+    ### 🧠 vs 🤖 Challenge
+    Do you feel you can beat the machine classifier? Please try! Test yourself by classifying five easy abstracts and five challenging ones, then compare your accuracy with the model’s performance.
+
+    [Take the survey](https://fsu.qualtrics.com/jfe/form/SV_81v6JJ7hXVd3eqq)
+    """)
 if __name__ == "__main__":
     main()
