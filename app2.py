@@ -41,7 +41,7 @@ def load_or_train_classification_bundle():
     abstracts, labels = load_corpus_data()
     y = labels.values
 
-    vectorizer = CountVectorizer(max_features=200, stop_words="english")
+    vectorizer = CountVectorizer(max_features=2000, stop_words="english")
     X_counts = vectorizer.fit_transform(abstracts)
 
     scaler = StandardScaler(with_mean=False).fit(X_counts)
