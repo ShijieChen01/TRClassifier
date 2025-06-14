@@ -49,7 +49,7 @@ def load_or_train_classification_bundle():
 
     classifiers = {
         "LogisticRegression": LogisticRegression(max_iter=1000, random_state=42),
-        "RandomForest": RandomForestClassifier(n_estimators=100, random_state=42),
+        "RandomForest": RandomForestClassifier(n_estimators=400,n_jobs = -1, random_state=42),
         "SVC": SVC(probability=True, random_state=42),
     }
 
