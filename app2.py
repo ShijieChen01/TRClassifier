@@ -128,13 +128,13 @@ def main():
               We trained on <strong>16,341</strong> Transportation Research abstracts published between <strong>2010 and 2024</strong>, using a <strong>70%/30%</strong> train–test split, and achieved a baseline accuracy of <strong>0.60</strong>. 
               A more advanced version incorporating topic‐distribution features reaches <strong>0.67</strong> accuracy—see the full implementation at 
               <a href="https://github.com/ShijieChen01/TRClassifier" target="_blank">TRClassifier</a>. 
-              For complete details on data preprocessing, model configuration, and evaluation, please refer to our preprint on 
-              <a href="https://arxiv.org/" target="_blank">arXiv</a>.
+              
             </div>
             """,
             unsafe_allow_html=True
         )
-
+        # For complete details on data preprocessing, model configuration, and evaluation, please refer to our preprint on 
+        #      <a href="https://arxiv.org/" target="_blank">arXiv</a>.
     with st.container():
         st.markdown("<div class='step-title start'>3. Get Started</div>", unsafe_allow_html=True)
         st.markdown(
