@@ -125,8 +125,8 @@ def main():
             """
             <div class='step-desc'>
               Our recommender is built on a majority‐vote ensemble of three term‐frequency–based classifiers: logistic regression, random forest, and support vector machine. 
-              We trained on <strong>16,341</strong> Transportation Research abstracts published between <strong>2010 and 2024</strong>, using a <strong>70%/30%</strong> train–test split, and achieved a baseline accuracy of <strong>0.60</strong>. 
-              A more advanced version incorporating topic‐distribution features reaches <strong>0.67</strong> accuracy—see the full implementation at 
+              We trained on <strong>16,341</strong> Transportation Research abstracts published between <strong>2010 and 2024</strong>, using a <strong>70%/30%</strong> train–test split, and achieved a baseline accuracy of <strong>0.67</strong>. 
+             See the full implementation at 
               <a href="https://github.com/ShijieChen01/TRClassifier" target="_blank">TRClassifier</a>. 
               
             </div>
