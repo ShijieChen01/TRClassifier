@@ -109,7 +109,7 @@ def main():
     )
 
     # App Header
-    st.markdown("<div class='page-title'>📑 Transportation Research Journal Recommender</div>", unsafe_allow_html=True)
+    st.markdown("<div class='page-title'> Transportation Research Journal Recommender</div>", unsafe_allow_html=True)
 
     # Step-by-step Introduction as rows
     with st.container():
@@ -146,7 +146,7 @@ def main():
     col_input, col_output = st.columns([3, 2])
 
     with col_input:
-        user_input = st.text_area("✍️ Paste your abstract here:", height=200)
+        user_input = st.text_area("Paste your abstract here:", height=200)
         analyze_clicked = st.button("Analyze Abstract")
         if analyze_clicked and not user_input.strip():
             st.warning("Please enter an abstract to analyze.")
@@ -168,7 +168,7 @@ def main():
     st.markdown(
         """
 <div class='survey'>
-  <h2>🧠 vs 🤖 Challenge</h2>
+  <h2>Classification Challenge</h2>
   <p>Do you feel you can beat the machine classifier? Please try! Test yourself by classifying five easy abstracts and five challenging ones, then compare your accuracy with the model’s performance.</p>
   <p><a href='https://fsu.qualtrics.com/jfe/form/SV_81v6JJ7hXVd3eqq' target='_blank'>Take the survey</a></p>
 </div>
