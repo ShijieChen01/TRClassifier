@@ -135,20 +135,23 @@ def main():
     # Introduction steps...
     with st.container():
         st.markdown("<div class='step-title intro'>1. Introduction</div>", unsafe_allow_html=True)
-        st.markdown("<div class='step-desc'>Have you wondered which part of the TR journal series is most relevant to your manuscript? Try our TR Journal Recommender!</div>", unsafe_allow_html=True)
+        st.markdown("<div class='step-desc'>Have you wondered which part of the Transportation Research (TR) journal series is most relevant to your next manuscript? Do you feel overwhelmed by the breadth of TR journals? Try our TR Journal Recommender!</div>", unsafe_allow_html=True)
 
     with st.container():
         st.markdown("<div class='step-title how'>2. How It Works</div>", unsafe_allow_html=True)
         st.markdown("""
-        <div class='step-desc'>
-        Built on a majority‐vote ensemble of logistic regression, random forest, and SVM. Trained on <strong>16,341</strong> abstracts (2010–2024) with baseline accuracy <strong>0.67</strong>. 
-        <a href="https://github.com/ShijieChen01/TRClassifier" target="_blank">Source on GitHub</a>.
-        </div>
-        """, unsafe_allow_html=True)
+            <div class='step-desc'>
+              Our recommender is built on a majority‐vote ensemble of three term‐frequency–based classifiers: logistic regression, random forest, and support vector machine. 
+              We trained on <strong>16,341</strong> Transportation Research abstracts published between <strong>2010 and 2024</strong>, using a <strong>70%/30%</strong> train–test split, and achieved a baseline accuracy of <strong>0.67</strong>. 
+             See the full implementation at 
+              <a href="https://github.com/ShijieChen01/TRClassifier" target="_blank">TRClassifier</a>. 
+
+            </div>
+            """, unsafe_allow_html=True)
 
     with st.container():
         st.markdown("<div class='step-title start'>3. Get Started</div>", unsafe_allow_html=True)
-        st.markdown("<div class='step-desc'>Paste your abstract below and click <strong>Analyze</strong>.</div>", unsafe_allow_html=True)
+        st.markdown("<div class='step-desc'>Paste your abstract below and click <strong>Analyze</strong> to receive a recommended TR journal.</div>", unsafe_allow_html=True)
 
     col_input, col_output = st.columns([3, 2])
     with col_input:
@@ -180,12 +183,12 @@ def main():
     # Survey Section
     st.markdown("---")
     st.markdown("""
-    <div class='survey'>
-      <h2>Classification Challenge</h2>
-      <p>Beat the machine by classifying some abstracts yourself, then compare your accuracy!</p>
-      <p><a href='https://fsu.qualtrics.com/jfe/form/SV_81v6JJ7hXVd3eqq' target='_blank'>Take the survey</a></p>
-    </div>
-    """, unsafe_allow_html=True)
+<div class='survey'>
+  <h2>Classification Challenge</h2>
+  <p>Do you feel you can beat the machine classifier? Please try! Test yourself by classifying five easy abstracts and five challenging ones, then compare your accuracy with the model’s performance.</p>
+  <p><a href='https://fsu.qualtrics.com/jfe/form/SV_81v6JJ7hXVd3eqq' target='_blank'>Take the survey</a></p>
+</div>
+""", unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
