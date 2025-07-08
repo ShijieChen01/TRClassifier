@@ -16,8 +16,8 @@ from collections import Counter
 VECTORIZER_PATH = "vectorizer.pkl"
 SCALER_PATH       = "scaler.pkl"
 MODEL_PATHS = {
-    "LogisticRegression": "logistic_regression.pkl",
-    "RandomForest":       "random_forest.pkl",
+    #"LogisticRegression": "logistic_regression.pkl",
+    #"RandomForest":       "random_forest.pkl",
     "SVC":                "svc.pkl",
 }
 
