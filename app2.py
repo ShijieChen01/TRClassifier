@@ -11,46 +11,61 @@ from sklearn.svm import SVC
 # ─────────────────────────────────────────────────────────────────────────────
 #  Configuration
 # ─────────────────────────────────────────────────────────────────────────────
-CLASSIFIER_BUNDLE_PATH = "classification_bundle.pkl"
+VECTORIZER_PATH = "vectorizer.pkl"
+SCALER_PATH       = "scaler.pkl"
+MODEL_PATHS = {
+    "LogisticRegression": "logistic_regression.pkl",
+    "RandomForest":       "random_forest.pkl",
+    "SVC":                "svc.pkl",
+}
+
 CORPUS_PATH = "WOS_data.xlsx"
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  Load Raw Data
 # ─────────────────────────────────────────────────────────────────────────────
 def load_corpus_data():
-    """
-    Load abstracts and labels from Excel.
-    """
     data = pd.read_excel(CORPUS_PATH, converters={"Abstract": str})
     abstracts = data["Abstract"].fillna("").tolist()
-    labels = data["Journal"].astype(str).reset_index(drop=True)
+    labels    = data["Journal"].astype(str).reset_index(drop=True)
     return abstracts, labels
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  Train or Load Classification Models
+#  Train or Load Classification Components
 # ─────────────────────────────────────────────────────────────────────────────
 def load_or_train_classification_bundle():
-    """
-    Load saved classification bundle or train classifiers on term-frequency features.
-    Returns a dict with vectorizer, scaler, and models.
-    """
-    if os.path.exists(CLASSIFIER_BUNDLE_PATH):
-        with open(CLASSIFIER_BUNDLE_PATH, "rb") as f:
-            return pickle.load(f)
+    # check if all files already exist
+    all_exist = (
+        os.path.exists(VECTORIZER_PATH)
+        and os.path.exists(SCALER_PATH)
+        and all(os.path.exists(p) for p in MODEL_PATHS.values())
+    )
+    if all_exist:
+        # load each
+        with open(VECTORIZER_PATH, "rb") as f:
+            vectorizer = pickle.load(f)
+        with open(SCALER_PATH, "rb") as f:
+            scaler = pickle.load(f)
+        trained_models = {}
+        for name, path in MODEL_PATHS.items():
+            with open(path, "rb") as f:
+                trained_models[name] = pickle.load(f)
+        return {"vectorizer": vectorizer, "scaler": scaler, "models": trained_models}
 
+    # otherwise, train from scratch
     abstracts, labels = load_corpus_data()
     y = labels.values
 
     vectorizer = CountVectorizer(max_features=2000, stop_words="english")
-    X_counts = vectorizer.fit_transform(abstracts)
+    X_counts   = vectorizer.fit_transform(abstracts)
 
-    scaler = StandardScaler(with_mean=False).fit(X_counts)
-    X_scaled = scaler.transform(X_counts)
+    scaler    = StandardScaler(with_mean=False).fit(X_counts)
+    X_scaled  = scaler.transform(X_counts)
 
     classifiers = {
         "LogisticRegression": LogisticRegression(max_iter=1000, random_state=42),
-        "RandomForest": RandomForestClassifier(n_estimators=400,n_jobs = -1, random_state=42),
-        "SVC": SVC(probability=True, random_state=42),
+        "RandomForest":       RandomForestClassifier(n_estimators=400, n_jobs=-1, random_state=42),
+        "SVC":                SVC(probability=True, random_state=42),
     }
 
     trained_models = {}
@@ -58,11 +73,17 @@ def load_or_train_classification_bundle():
         clf.fit(X_scaled, y)
         trained_models[name] = clf
 
-    bundle = {"vectorizer": vectorizer, "scaler": scaler, "models": trained_models}
-    with open(CLASSIFIER_BUNDLE_PATH, "wb") as f:
-        pickle.dump(bundle, f)
+    # save each component separately
+    with open(VECTORIZER_PATH, "wb") as f:
+        pickle.dump(vectorizer, f)
+    with open(SCALER_PATH, "wb") as f:
+        pickle.dump(scaler, f)
+    for name, model in trained_models.items():
+        with open(MODEL_PATHS[name], "wb") as f:
+            pickle.dump(model, f)
 
-    return bundle
+    return {"vectorizer": vectorizer, "scaler": scaler, "models": trained_models}
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  Analyze Single Abstract
@@ -83,6 +104,7 @@ def analyze_user_abstract(user_text, bundle):
     for name, clf in models.items():
         predictions[name] = clf.predict(X_user_scaled)[0]
     return predictions
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  Streamlit App
@@ -128,12 +150,12 @@ def main():
               We trained on <strong>16,341</strong> Transportation Research abstracts published between <strong>2010 and 2024</strong>, using a <strong>70%/30%</strong> train–test split, and achieved a baseline accuracy of <strong>0.67</strong>. 
              See the full implementation at 
               <a href="https://github.com/ShijieChen01/TRClassifier" target="_blank">TRClassifier</a>. 
-              
+
             </div>
             """,
             unsafe_allow_html=True
         )
-        # For complete details on data preprocessing, model configuration, and evaluation, please refer to our preprint on 
+        # For complete details on data preprocessing, model configuration, and evaluation, please refer to our preprint on
         #      <a href="https://arxiv.org/" target="_blank">arXiv</a>.
     with st.container():
         st.markdown("<div class='step-title start'>3. Get Started</div>", unsafe_allow_html=True)
@@ -155,12 +177,20 @@ def main():
         with st.spinner("Processing..."):
             bundle = load_or_train_classification_bundle()
             preds = analyze_user_abstract(user_input, bundle)
+            # If all three models disagree, pick the SVC result; otherwise, majority vote
             from collections import Counter
-            vote_counts = Counter(preds.values())
-            recommended = vote_counts.most_common(1)[0][0]
+            pred_values = list(preds.values())
+            unique_preds = set(pred_values)
+
+            if len(unique_preds) == 3:
+                recommended = preds["SVC"]
+            else:
+                recommended = Counter(pred_values).most_common(1)[0][0]
 
         with col_output:
-            st.markdown(f"<div class='result-box'><div class='step-title'>Recommended Journal</div><div class='step-desc'><strong>{recommended}</strong></div></div>", unsafe_allow_html=True)
+            st.markdown(
+                f"<div class='result-box'><div class='step-title'>Recommended Journal</div><div class='step-desc'><strong>{recommended}</strong></div></div>",
+                unsafe_allow_html=True)
             st.success("Analysis complete!")
 
     # Survey Section
@@ -175,6 +205,7 @@ def main():
 """,
         unsafe_allow_html=True
     )
+
 
 if __name__ == "__main__":
     main()
