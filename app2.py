@@ -145,7 +145,7 @@ def main():
               We trained on <strong>16,341</strong> Transportation Research abstracts published between <strong>2010 and 2024</strong>, using a <strong>70%/30%</strong> train–test split, and achieved a baseline accuracy of <strong>0.67</strong>. 
              See the full implementation at 
               <a href="https://github.com/ShijieChen01/TRClassifier" target="_blank">TRClassifier</a>. 
-              This system is a decision-support tool that suggests journals; its recommendations are not final and should be carefully verified by you before making decisions.
+              This system is a decision-support tool that suggests options; all recommendations should be carefully reviewed before making a final decision.
 
             </div>
             """, unsafe_allow_html=True)
@@ -194,4 +194,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
